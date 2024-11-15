@@ -7,6 +7,7 @@ export async function GET(_: NextRequest) {
 
     return NextResponse.json(resumes);
   } catch (e) {
+    console.error(e);
 
     return NextResponse.json(
       { message: "Failed to create upload resume" },
