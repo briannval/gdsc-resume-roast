@@ -3,18 +3,39 @@ import { s3 } from "@/lib/aws";
 import { ChangeEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const router = useRouter();
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const selectedFile = event.target.files[0];
+      if (selectedFile.type !== "application/pdf") {
+        setError("Please upload a valid PDF file.");
+        setFile(null);
+      } else {
+        setFile(selectedFile);
+        setError(null);
+      }
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+      const selectedFile = event.dataTransfer.files[0];
       if (selectedFile.type !== "application/pdf") {
         setError("Please upload a valid PDF file.");
         setFile(null);
@@ -42,9 +63,10 @@ export default function Home() {
         ContentType: file.type,
       };
       const { Location } = await s3.upload(params).promise();
-      setDownloadUrl(Location);
-      setLoading(false);
-      router.push("/rate")
+      await axios.post("/api/resume/new", {
+        link: Location
+      })
+      router.push("/rate");
     } catch (error) {
       setLoading(false);
       setError("Error uploading file: " + (error instanceof Error ? error.message : "Unknown error"));
@@ -56,7 +78,11 @@ export default function Home() {
     <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
       <div className="text-5xl font-bold mb-8">Upload your resume here!</div>
 
-      <div className="flex items-center justify-center w-3/4 mb-6">
+      <div
+        className="flex items-center justify-center w-3/4 mb-6"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         <label
           htmlFor="dropzone-file"
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:border-gray-500"
@@ -97,12 +123,6 @@ export default function Home() {
               Clear
             </button>
           </div>
-        </div>
-      )}
-
-      {downloadUrl && (
-        <div className="mt-6 text-green-500">
-          <p>File uploaded successfully!</p>
         </div>
       )}
     </main>
