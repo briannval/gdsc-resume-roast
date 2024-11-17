@@ -1,6 +1,6 @@
 "use client";
 import { s3 } from "@/lib/aws";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -69,7 +69,7 @@ export default function Home() {
       const { Location } = await s3.upload(params).promise();
       const res = await axios.post("/api/resume/new", {
         link: Location
-      })
+      });
       setResumeUploaded(res.data.id);
       router.push("/rate");
     } catch (error) {
@@ -79,38 +79,47 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (resumeUploaded) {
-      router.push("/rate");
-    }
-  }, [resumeUploaded, router]);
+  const handleRate = () => {
+    router.push("/rate");
+  };
 
   return (
     <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
-      <div className="text-5xl font-bold mb-8">Upload your resume here!</div>
+      <div className="text-5xl font-bold mb-8">{resumeUploaded ? "Thank you for Uploading!" : "Upload your resume here!"}</div>
 
       <Image src={"/icon.png"} alt="GDSC" width={250} height={250} />
 
-      <div
-        className="flex items-center justify-center w-3/4 mb-6"
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        <label
-          htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:border-gray-500"
+      {resumeUploaded ? (
+        <button
+          type="button"
+          onClick={handleRate}
+          disabled={loading}
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300"
         >
-          <input
-            disabled={file != null}
-            id="dropzone-file"
-            accept="application/pdf"
-            type="file"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          <span className="text-gray-500">Drag & Drop your PDF resume here</span>
-        </label>
-      </div>
+          Rate Others!
+        </button>
+      ) : (
+        <div
+          className="flex items-center justify-center w-3/4 mb-6"
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          <label
+            htmlFor="dropzone-file"
+            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:border-gray-500"
+          >
+            <input
+              disabled={file != null}
+              id="dropzone-file"
+              accept="application/pdf"
+              type="file"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <span className="text-gray-500">Drag & Drop your PDF resume here</span>
+          </label>
+        </div>
+      )}
 
       {error && <div className="text-red-500 mb-4">{error}</div>}
 

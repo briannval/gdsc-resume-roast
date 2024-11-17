@@ -1,5 +1,6 @@
 'use client'
 
+import Loading from "@/components/Loading";
 import { useGlobal } from "@/hooks/useGlobal";
 import axios from "axios";
 import Image from "next/image";
@@ -96,12 +97,7 @@ export default function Rate() {
         <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
             <div className="text-5xl font-bold mb-8">Rate others' resumes!</div>
 
-            {loading ? (
-                <>
-                    <Image src={"/icon.png"} alt="GDSC" width={250} height={250} />
-                    <div className="text-2xl mb-8">Loading...</div>
-                </>
-            ) : (
+            {loading ? <Loading /> : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                     {resumes.map((resume) => (
                         <div key={resume.id} className="border px-4 py-8 rounded-lg shadow-md bg-white grid grid-cols-1 xl:grid-cols-2 gap-4">

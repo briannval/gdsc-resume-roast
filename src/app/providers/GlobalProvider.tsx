@@ -1,28 +1,33 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from "react";
 import { GlobalContext } from "@/contexts/GlobalContext";
+import Loading from "@/components/Loading";
 
 interface GlobalProviderProps {
     children: React.ReactNode;
 }
 
 export default function GlobalProvider({ children }: GlobalProviderProps) {
-    const [resumeUploaded, setResumeUploaded] = useState<number | null>(() => {
-        if (typeof window !== "undefined") {
-            const storedValue = localStorage.getItem("resumeUploaded");
-            return storedValue ? JSON.parse(storedValue) : null;
-        }
-        return null;
-    });
+    const [resumeUploaded, setResumeUploaded] = useState<number | null>(null);
+    const [ratingUploaded, setRatingUploaded] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const [ratingUploaded, setRatingUploaded] = useState<boolean>(() => {
-        if (typeof window !== "undefined") {
-            const storedValue = localStorage.getItem("ratingUploaded");
-            return storedValue ? JSON.parse(storedValue) : false;
+    useEffect(() => {
+        const storedResumeUploaded = localStorage.getItem("resumeUploaded");
+        const storedRatingUploaded = localStorage.getItem("ratingUploaded");
+
+        if (storedResumeUploaded) {
+            setResumeUploaded(JSON.parse(storedResumeUploaded));
         }
-        return false;
-    });
+        if (storedRatingUploaded) {
+            setRatingUploaded(JSON.parse(storedRatingUploaded));
+        }
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 5000);
+    }, []);
 
     useEffect(() => {
         if (resumeUploaded !== null) {
@@ -34,6 +39,14 @@ export default function GlobalProvider({ children }: GlobalProviderProps) {
         localStorage.setItem("ratingUploaded", JSON.stringify(ratingUploaded));
     }, [ratingUploaded]);
 
+    if (loading) {
+        return (
+            <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
+                <Loading />
+            </main>
+        );
+    }
+
     return (
         <GlobalContext.Provider
             value={{
@@ -41,6 +54,8 @@ export default function GlobalProvider({ children }: GlobalProviderProps) {
                 ratingUploaded,
                 setResumeUploaded,
                 setRatingUploaded,
+                setLoading,
+                loading,
             }}
         >
             {children}
