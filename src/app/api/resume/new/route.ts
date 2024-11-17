@@ -5,13 +5,13 @@ export async function POST(request: NextRequest) {
   try {
     const { link } = await request.json();
 
-    await prisma.resume.create({
+    const r = await prisma.resume.create({
         data: {
             link,
         }
     })
 
-    return NextResponse.json("Success");
+    return NextResponse.json(r);
   } catch (e) {
 
     return NextResponse.json(

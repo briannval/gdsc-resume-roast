@@ -1,14 +1,18 @@
 "use client";
 import { s3 } from "@/lib/aws";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useGlobal } from "@/hooks/useGlobal";
+import Image from "next/image";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { resumeUploaded, setResumeUploaded } = useGlobal();
 
   const router = useRouter();
 
@@ -63,9 +67,10 @@ export default function Home() {
         ContentType: file.type,
       };
       const { Location } = await s3.upload(params).promise();
-      await axios.post("/api/resume/new", {
+      const res = await axios.post("/api/resume/new", {
         link: Location
       })
+      setResumeUploaded(res.data.id);
       router.push("/rate");
     } catch (error) {
       setLoading(false);
@@ -74,9 +79,17 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    if (resumeUploaded) {
+      router.push("/rate");
+    }
+  }, [resumeUploaded, router]);
+
   return (
     <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
       <div className="text-5xl font-bold mb-8">Upload your resume here!</div>
+
+      <Image src={"/icon.png"} alt="GDSC" width={250} height={250} />
 
       <div
         className="flex items-center justify-center w-3/4 mb-6"

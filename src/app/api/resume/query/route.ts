@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-export async function GET(_: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const resumes = await prisma.resume.findMany();
+    const { id } = await request.json();
+
+    const resumes = await prisma.resume.findMany({
+        where: {
+          NOT: {
+            id: id,
+          },
+        },
+      });
 
     return NextResponse.json(resumes);
   } catch (e) {
