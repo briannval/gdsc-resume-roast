@@ -26,7 +26,7 @@ export default function GlobalProvider({ children }: GlobalProviderProps) {
 
         setTimeout(() => {
             setLoading(false);
-        }, 5000);
+        }, 4000);
     }, []);
 
     useEffect(() => {

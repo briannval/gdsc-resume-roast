@@ -81,9 +81,9 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
-      <div className="text-5xl font-bold mb-8">{resumeUploaded ? "Thank you for Uploading!" : "Upload your resume here!"}</div>
+      <div className="text-3xl md:text-5xl xl:text-7xl font-bold mb-8">{resumeUploaded ? "Thank you for Uploading!" : "Upload your resume here!"}</div>
 
-      <Image src={"/icon.png"} alt="GDSC" width={250} height={250} />
+      <Image src={"/icon.png"} alt="GDSC" width={200} height={200} />
 
       {resumeUploaded ? (
         <button
