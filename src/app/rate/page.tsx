@@ -91,11 +91,6 @@ export default function Rate() {
         }
     };
 
-    useEffect(() => {
-        if (resumeUploaded) {
-            router.push("/");
-        }
-    }, [resumeUploaded, router]);
 
     return (
         <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
