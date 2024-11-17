@@ -79,10 +79,6 @@ export default function Home() {
     }
   };
 
-  const handleRate = () => {
-    router.push("/rate");
-  };
-
   return (
     <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
       <div className="text-5xl font-bold mb-8">{resumeUploaded ? "Thank you for Uploading!" : "Upload your resume here!"}</div>
@@ -92,8 +88,7 @@ export default function Home() {
       {resumeUploaded ? (
         <button
           type="button"
-          onClick={handleRate}
-          disabled={loading}
+          onClick={() => window.location.href = "/rate"}
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300"
         >
           Rate Others!
