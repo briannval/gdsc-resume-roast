@@ -19,7 +19,7 @@ interface Review {
     id: number;
     formatting: number;
     relevance: number;
-    quantification: number;
+    structure: number;
     clarity: number;
     wording: number;
     resumeId: number;
@@ -30,7 +30,7 @@ interface Ratings {
     [resumeId: number]: {
         formatting: number;
         relevance: number;
-        quantification: number;
+        structure: number;
         clarity: number;
         wording: number;
     };
@@ -80,7 +80,7 @@ export default function Rate() {
                 formatting: review.formatting,
                 relevance: review.relevance,
                 clarity: review.clarity,
-                quantification: review.quantification,
+                structure: review.structure,
                 wording: review.wording
             });
             setResumes((resumes) => resumes.filter((r) => r.id !== resumeId));
@@ -102,7 +102,7 @@ export default function Rate() {
                     {resumes.map((resume) => (
                         <div key={resume.id} className="border px-4 py-8 rounded-lg shadow-md bg-white grid grid-cols-1 xl:grid-cols-2 gap-4">
                             <div className="flex flex-col space-y-6 justify-center items-center">
-                                {['formatting', 'relevance', 'quantification', 'clarity', 'wording'].map((rubric) => (
+                                {['formatting', 'relevance', 'structure', 'clarity', 'wording'].map((rubric) => (
                                     <div key={rubric} className="w-full text-center">
                                         <h4 className="font-medium text-lg mb-2">{rubric.charAt(0).toUpperCase() + rubric.slice(1)}</h4>
                                         <div className="flex justify-center space-x-2">

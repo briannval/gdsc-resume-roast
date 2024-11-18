@@ -3,14 +3,14 @@ import prisma from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
-    const { resumeId, formatting, relevance, quantification, clarity, wording } = await request.json();
+    const { resumeId, formatting, relevance, structure, clarity, wording } = await request.json();
 
     await prisma.review.create({
       data: {
         resumeId,
         formatting,
         relevance,
-        quantification,
+        structure,
         clarity,
         wording
       }

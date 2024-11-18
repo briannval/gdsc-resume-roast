@@ -17,7 +17,7 @@ model Review {
   id              Int    @id @default(autoincrement())
   formatting      Int 
   relevance       Int
-  quantification  Int 
+  structure  Int 
   clarity         Int
   wording         Int
   resumeId        Int

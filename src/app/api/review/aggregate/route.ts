@@ -6,7 +6,7 @@ export async function GET(_: NextRequest) {
     const reviews = prisma.review.groupBy({
         by: ["resumeId"],
         _avg: {
-            quantification: true,
+            structure: true,
             clarity: true,
             formatting: true,
             relevance: true,
