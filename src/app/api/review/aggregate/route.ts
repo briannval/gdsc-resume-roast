@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 
 export async function GET(_: NextRequest) {
   try {
-    const reviews = prisma.review.groupBy({
+    const reviews = await prisma.review.groupBy({
         by: ["resumeId"],
         _avg: {
             structure: true,
