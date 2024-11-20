@@ -2,29 +2,12 @@
 
 import Loading from "@/components/Loading";
 import { useGlobal } from "@/hooks/useGlobal";
+import { Resume } from "@prisma/client";
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Resume {
-    id: number;
-    link: string;
-    name: string;
-    description: string;
-    reviews: Review[];
-}
-
-interface Review {
-    id: number;
-    formatting: number;
-    relevance: number;
-    structure: number;
-    clarity: number;
-    wording: number;
-    resumeId: number;
-    resume: Resume;
-}
+const MINIMAL_RESUMES_TO_RATE = 3;
 
 interface Ratings {
     [resumeId: number]: {
@@ -41,6 +24,7 @@ export default function Rate() {
     const [resumes, setResumes] = useState<Resume[]>([]);
     const [ratings, setRatings] = useState<Ratings>({});
     const [loading, setLoading] = useState<boolean>(true);
+    const [rated, setRated] = useState<number>(0);
     const [submitting, setSubmitting] = useState<{ [resumeId: number]: boolean }>({});
     const router = useRouter();
 
@@ -84,7 +68,7 @@ export default function Rate() {
                 wording: review.wording
             });
             setResumes((resumes) => resumes.filter((r) => r.id !== resumeId));
-            alert("Review submitted successfully");
+            setRated((r) => r + 1);
         } catch (error) {
             alert("Failed to submit review");
         } finally {
@@ -96,6 +80,16 @@ export default function Rate() {
     return (
         <main className="flex min-h-screen flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 p-8">
             <div className="text-3xl md:text-5xl xl:text-7xl font-bold mb-8">Rate others' resumes!</div>
+
+            {rated < MINIMAL_RESUMES_TO_RATE ?
+                <div className="text-sm md:text-md xl:text-lg font-semibold mb-8">You have to rate <span className="font-bold">{MINIMAL_RESUMES_TO_RATE - rated}</span> more resumes before proceeding.</div> :
+                <button
+                    type="button"
+                    onClick={() => window.location.href = "/stats"}
+                    className="bg-blue-500 text-white px-6 py-2 rounded-lg text-lg md:text-xl hover:bg-blue-600 disabled:bg-blue-300 mb-6"
+                >
+                    View Stats
+                </button>}
 
             {loading ? <Loading /> : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">

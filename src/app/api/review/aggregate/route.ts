@@ -12,12 +12,25 @@ export async function GET(_: NextRequest) {
             relevance: true,
             wording: true,
         },
+        _count: {
+          id: true
+        },
         orderBy: {
             resumeId: 'asc'
-        }
+        },
     })
 
-    return NextResponse.json(reviews);
+    const resumes = await prisma.resume.findMany({});
+
+    const res = reviews.map((r) => {
+      const resume = resumes.find((resume) => resume.id == r.resumeId);
+      return {
+        ...r,
+        resumeLink: resume?.link
+      }
+    })
+
+    return NextResponse.json(res);
   } catch (e) {
     console.error(e);
 
