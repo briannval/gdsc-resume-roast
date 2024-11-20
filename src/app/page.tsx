@@ -71,7 +71,6 @@ export default function Home() {
         link: Location
       });
       setResumeUploaded(res.data.id);
-      router.push("/rate");
     } catch (error) {
       setLoading(false);
       setError("Error uploading file: " + (error instanceof Error ? error.message : "Unknown error"));
@@ -116,9 +115,9 @@ export default function Home() {
         </div>
       )}
 
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {(!resumeUploaded && error) && <div className="text-red-500 mb-4">{error}</div>}
 
-      {file && (
+      {(!resumeUploaded && file) && (
         <div className="flex flex-col items-center">
           <p className="text-lg text-gray-900 mb-4">Selected file: {file.name}</p>
 
