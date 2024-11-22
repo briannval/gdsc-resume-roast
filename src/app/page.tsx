@@ -110,7 +110,7 @@ export default function Home() {
               className="hidden"
               onChange={handleFileChange}
             />
-            <span className="text-gray-500">Drag & Drop your PDF resume here</span>
+            <span className="text-gray-500 text-center w-full flex justify-center items-center max-w-full text-xs md:text-lg px-6">{file ? file.name : "Drag & Drop your PDF resume here"}</span>
           </label>
         </div>
       )}
@@ -119,7 +119,6 @@ export default function Home() {
 
       {(!resumeUploaded && file) && (
         <div className="flex flex-col items-center">
-          <p className="text-lg text-gray-900 mb-4">Selected file: {file.name}</p>
 
           <div className="flex space-x-4">
             <button
