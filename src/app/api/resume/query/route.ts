@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     console.error(e);
 
     return NextResponse.json(
-      { message: "Failed to create upload resume" },
+      { message: "Failed to fetch resumes" },
       { status: 500 }
     );
   }

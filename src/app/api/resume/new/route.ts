@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   } catch (e) {
 
     return NextResponse.json(
-      { message: "Failed to create upload resume" },
+      { message: "Failed to create new resume" },
       { status: 500 }
     );
   }

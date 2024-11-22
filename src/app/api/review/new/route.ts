@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
   } catch (e) {
 
     return NextResponse.json(
-      { message: "Failed to add review" },
+      { message: "Failed to create new review" },
       { status: 500 }
     );
   }

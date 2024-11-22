@@ -35,7 +35,7 @@ export async function GET(_: NextRequest) {
     console.error(e);
 
     return NextResponse.json(
-      { message: "Failed to create upload resume" },
+      { message: "Failed to fetch reviews" },
       { status: 500 }
     );
   }
