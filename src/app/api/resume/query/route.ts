@@ -11,6 +11,13 @@ export async function POST(request: NextRequest) {
             id: id,
           },
         },
+        orderBy: [
+          {
+            reviews: {
+              _count: 'asc'
+            }
+          }
+        ],
       });
 
     return NextResponse.json(resumes);

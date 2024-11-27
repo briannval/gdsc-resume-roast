@@ -7,7 +7,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const MINIMAL_RESUMES_TO_RATE = 3;
+const MINIMAL_RESUMES_TO_RATE = 5;
+const RUBRICS = ['formatting', 'relevance', 'structure', 'clarity', 'wording'];
 
 interface Ratings {
     [resumeId: number]: {
@@ -96,11 +97,11 @@ export default function Rate() {
                     {resumes.map((resume) => (
                         <div key={resume.id} className="border px-4 py-8 rounded-lg shadow-md bg-white grid grid-cols-1 xl:grid-cols-2 gap-4">
                             <div className="flex flex-col space-y-6 justify-center items-center">
-                                {['formatting', 'relevance', 'structure', 'clarity', 'wording'].map((rubric) => (
+                                {RUBRICS.map((rubric) => (
                                     <div key={rubric} className="w-full text-center">
                                         <h4 className="font-medium text-lg mb-2">{rubric.charAt(0).toUpperCase() + rubric.slice(1)}</h4>
                                         <div className="flex justify-center space-x-2">
-                                            {[1, 2, 3, 4, 5].map((star) => (
+                                            {Array.from({ length: 5 }, (_, i) => i + 1).map((star) => (
                                                 <button
                                                     key={star}
                                                     className={`${ratings[resume.id] && ratings[resume.id][rubric as keyof Ratings[typeof resume.id]] >= star
